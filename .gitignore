@@ -1,0 +1,46 @@
+# Xcode-specific files
+.DS_Store
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Xcode build files
+build/
+DerivedData/
+
+# User-specific settings
+*.xcuserdatad/
+*.xcuserdata/
+*.swp
+*.lock
+*.env
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Archives
+*.xcarchive
+
+# Playground files
+timeline.xctimeline
+playground.xcworkspace
+
+# App Store Connect files
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Code coverage
+*.xcresult
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Symbolic links
+*.bcsymbolmap
+
+# Swift Package Manager artifacts
+.swiftpm/xcode/
