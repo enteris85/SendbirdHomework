@@ -61,6 +61,10 @@ final class UserManager: SBUserManager {
     
     private let serialQueue = DispatchQueue(label: "com.sendbird.userQueue")
     
+    deinit {
+        print("UserManager deinit")
+    }
+    
     init() {
         networkClient = NetworkClient()
         userStorage = UserStorage()
@@ -91,7 +95,7 @@ final class UserManager: SBUserManager {
     func createUsers(params: [UserCreationParams], completionHandler: ((UsersResult) -> Void)?) {
         // 10개 이상일 경우 에러 리턴
         guard params.count <= 10 else {
-            completionHandler?(.failure(UserError.maxCountExceeded))
+            completionHandler?(.failure(SBError.maxCountExceeded))
             return
         }
         
@@ -114,7 +118,7 @@ final class UserManager: SBUserManager {
             let successUsers = result.compactMap { try? $0.get() }
             // 모두 성공일 경우만 success
             let returnResult: UsersResult = successUsers.count == result.count ? .success(successUsers) :
-                .failure(UserError.partialFailure)
+                .failure(SBError.partialFailure)
             completionHandler?(returnResult)
         }
     }
@@ -153,7 +157,7 @@ final class UserManager: SBUserManager {
     
     func getUsers(nicknameMatches: String, completionHandler: ((UsersResult) -> Void)?) {
         guard nicknameMatches.isEmpty == false else {
-            completionHandler?(.failure(UserError.needNickname))
+            completionHandler?(.failure(SBError.needNickname))
             return
         }
         let users = self.userStorage.getUsers(for: nicknameMatches)

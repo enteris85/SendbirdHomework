@@ -28,9 +28,12 @@ final class UserStorage: SBUserStorage {
     private var userList: OrderedDictionary<String, SBUser> = [:]
     private var nicknameList: Set<String> = Set()
     private let queue = DispatchQueue(label: "com.sendbird.storage", attributes: .concurrent)
+    deinit {
+        print("UserStorage deinit")
+    }
     
     func upsertUser(_ user: SBUser) {
-        queue.sync(flags: .barrier) {
+        queue.async(flags: .barrier) {
             self.userList[user.userId] = user
         }
     }
@@ -39,23 +42,23 @@ final class UserStorage: SBUserStorage {
         queue.sync { Array(userList.values) }
     }
     
-    // interview 문서상으론 언제쓰는건지 잘 이해가 되지않아서..일단 검색했던 nickname일 경우 메모리 기반으로 리턴하도록 했습니다.
+    //  과제 문서상으론 언제쓰는건지 잘 이해가 되지않아서..일단 검색했던 nickname일 경우 메모리 기반으로 리턴하도록 했습니다.
     func getUsers(for nickname: String) -> [SBUser] {
-        queue.sync(flags: .barrier) {
+        queue.sync {
             if nicknameList.contains(nickname) {
                 return userList.values.filter { $0.nickname == nickname }
             }
             else {
-                nicknameList.insert(nickname)
+                queue.async(flags: .barrier) {
+                    self.nicknameList.insert(nickname)
+                }
                 return []
             }
         }
     }
 
     func getUser(for userId: String) -> SBUser? {
-        queue.sync {
-            self.userList[userId]
-        }
+        queue.sync { self.userList[userId] }
     }
     
     func removeAll() {

@@ -320,10 +320,7 @@ open class UserManagerBaseTests: XCTestCase {
             if case .failure(_) = $0 { return true }
             return false
         }
-        /** 문서를 다시 읽어봐도 10개가 성공하고 1개가 실패해야 하는 이유를 모르겠습니다.
-         createUser는 제한기능이 없고 그냥 User를 생성하라고만 명시되어 있는데,, 문의를 남겨도 답변이 없어서 임의대로 고쳐놨습니다.
-        **/
-        XCTAssertEqual(successResults.count, 11)
-        XCTAssertEqual(rateLimitResults.count, 0)
+        XCTAssertEqual(successResults.count, 10)
+        XCTAssertEqual(rateLimitResults.count, 1)
     }
 }
